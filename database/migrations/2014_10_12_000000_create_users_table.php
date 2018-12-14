@@ -30,6 +30,8 @@ class CreateUsersTable extends Migration
 
             $table->string('sex', 10)->nullable();
 
+            $table->string('avatar', 255)->nullable();
+
             $table->string('email')->unique();
 
             $table->timestamp('email_verified_at')->nullable();

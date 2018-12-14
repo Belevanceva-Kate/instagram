@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    // use Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +18,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'nick', 'email', 'password',
+        // 'name', 'nick', 'email', 'password',
+        'name', 'nick', 'birthday', 'about', 'sex', 'avatar', 'email', 'password',
     ];
 
     /**

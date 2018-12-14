@@ -4,11 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Model\Image;
+use App\Model\Filter;
+use ImageMagick;
 
 class ImageController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('home');
+    }
+
     public function item(int $id, Request $requset) : JsonResponse
     {
         try {
@@ -82,7 +95,7 @@ class ImageController extends Controller
                 'path',
                 'name',
                 'description',
-                // 'user_id'
+                'user_id'
             ));
             $model->save();
 
@@ -97,7 +110,9 @@ class ImageController extends Controller
     public function update(int $id, Request $request) : JsonResponse
     {
         $request->validate([
-            'name' => 'string|max:255'
+            'path' => 'string|max:255',
+            'name' => 'string|max:255',
+            'description' => 'string|max:255'
         ]);
 
         try {
@@ -114,7 +129,12 @@ class ImageController extends Controller
         }
 
         try {
-            $model->fill($request->only('name'));
+            $model->fill($request->only(
+                'path',
+                'name',
+                'description',
+                'user_id'
+            ));
             $model->save();
         }
         catch (\Exception $err) {
@@ -154,6 +174,39 @@ class ImageController extends Controller
             'message' => __('responses.delete_successful'), 
             'model' => null 
         ], 200);
+    }
+
+    public function store(Request $request)
+    {
+        if($request->hasFile('profile_image')) {
+            //get filename with extension
+            $filenamewithextension = $request->file('profile_image')->getClientOriginalName();
+     
+            //get filename without extension
+            $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
+     
+            //get file extension
+            $extension = $request->file('profile_image')->getClientOriginalExtension();
+     
+            //filename to store
+            $filenametostore = $filename.'_'.time().'.'.$extension;
+     
+            //Upload File
+            $request->file('profile_image')->storeAs('public/profile_images', $filenametostore);
+            $request->file('profile_image')->storeAs('public/profile_images/thumbnail', $filenametostore);
+     
+            //Resize image here
+            $thumbnailpath = public_path('storage/profile_images/thumbnail/'.$filenametostore);
+            $img = ImageMagick::make($thumbnailpath)->resize(400, 150, function($constraint) {
+                $constraint->aspectRatio();
+            });
+            $img->save($thumbnailpath);
+
+            //Hard crop
+            // $img = Image::make($thumbnailpath)->resize(100, 100)->save($thumbnailpath);
+     
+            return redirect('home')->with('success', "Image uploaded successfully.");
+        }
     }
 
     public function setParamsBeforeQuery($q, array $params)

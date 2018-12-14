@@ -21,5 +21,12 @@ class ImageSeeder extends Seeder
         	'description' => 'It is unbelievable. I was in Japan!',
         	'user_id' => $user1->id
         ]);
+
+        App\Model\Image::create([
+        	'path' => 'nature2.jpg',
+        	'name' => 'Nature',
+        	'description' => 'I saw sakure trees',
+        	'user_id' => $user1->id
+        ]);
     }
 }
