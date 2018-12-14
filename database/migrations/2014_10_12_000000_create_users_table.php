@@ -22,12 +22,13 @@ class CreateUsersTable extends Migration
             
             $table->string('name');
 
-            $table->string('nick');
+            $table->string('nick')->unique();
 
-            // $table->string('nickname', 255);
-            // $table->string('about', 255)
-            //     ->nullable();
-            // $table->string('sex', 10);
+            $table->date('birthday')->nullable();
+
+            $table->string('about')->nullable();
+
+            $table->string('sex', 10)->nullable();
 
             $table->string('email')->unique();
 
