@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'asset_url' => env('ASSET_URL', null),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -222,8 +224,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'ImageMagick' => Intervention\Image\Facades\ImageMagick::class,
-        // 'Image' => Intervention\Image\ImageManagerStatic::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

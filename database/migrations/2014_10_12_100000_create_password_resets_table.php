@@ -19,7 +19,7 @@ class CreatePasswordResetsTable extends Migration
             $table->collation = 'utf8mb4_general_ci';
 
             $table->string('email')->index();
-
+            
             $table->string('token');
             
             $table->timestamp('created_at')->nullable();

@@ -29,7 +29,7 @@ class CreateImagesTable extends Migration
 
             $table->integer('user_id')
                 ->nullable(false);
-            
+
             $table->timestamps();
         });
     }

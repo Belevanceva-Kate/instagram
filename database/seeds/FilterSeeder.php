@@ -11,12 +11,6 @@ class FilterSeeder extends Seeder
      */
     public function run()
     {
-        App\Model\Filter::create([
-        	'name' => 'sepiaToneImage'
-        ]);
-
-        App\Model\Filter::create([
-        	'name' => 'roundCorners'
-        ]);
+        factory(App\Models\Filter::class, 10)->create();
     }
 }

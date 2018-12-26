@@ -3,220 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use App\Model\Image;
-use App\Model\Filter;
-use ImageMagick;
+use App\Http\Requests\ImageRequestValidation;
+use App\Services\ImageService;
 
 class ImageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    protected $imageService;
+
+	public function __construct(ImageService $imageService) {
+		$this->imageService = $imageService;
+	}
+
+    public function showOne(int $id)
     {
-        return view('home');
+		return $this->imageService->showOne($id);
     }
 
-    public function item(int $id, Request $requset) : JsonResponse
+    public function showAll()
     {
-        try {
-            $model = Image::findOrFail($id);
-        }
-        catch (\Exception $err) {
-            logger($err->getMessage());
-
-            return response()->json([ 
-                'status' => false, 
-                'message' => $err->getMessage(), 
-                'model' => null 
-            ], 422);
-        }
-
-        return response()->json([ 
-            'status' => true, 
-            'message' => __('responses.item_success'), 
-            'model' => $model 
-        ], 200);
+		return $this->imageService->showAll();
     }
 
-    public function collection(Request $request) : JsonResponse
+    public function createOne(Request $request)
     {
-        $params = $request->all();
+        // print_r($request->all());
 
-        try {
-            $all = Image::select('id', 'path', 'name', 'description');
-
-            $all = $this->setParamsBeforeQuery($all, $params)
-                ->get();
+        // if param was send
+        if(key_exists('filter', $request->all())) {
+            $inputData = $request->only(['path', 'name', 'description', 'user_id', 'filter']);
         }
-        catch (\Exception $err) {
-            logger($err->getMessage());
-
-            return response()->json([ 
-                'status' => false,
-                'message' => $err->getMessage(),
-                'collection' => []
-            ], 422);
+        else {
+            $inputData = $request->only(['path', 'name', 'description', 'user_id']);
         }
 
-        return response()->json([ 
-            'status' => true, 
-            'collection' => $all, 
-            'message' => __('responses.collection_successful') 
-        ], 200);
+        return $this->imageService->createOne($inputData);
     }
 
-    public function create(Request $request) : JsonResponse
+    public function updateOne(int $id, Request $request)
     {
-        try {
-            $request->validate([
-                'path' => 'string|max:255',
-                'name' => 'string|max:255',
-                'description' => 'string|max:255',
-                'payment_id' => 'integer',
-            ]);
-        }
-        catch(\Exception $err) {
-            return response()->json([
-                'status' => false,
-                'message' => 'responses.invalid_format',
-                'model' => null
-            ], 422);
-        }
-
-        return DB::transaction(function() use($request) {
-            $model = new Image;
-            $model->fill($params = $request->only(
-                'path',
-                'name',
-                'description',
-                'user_id'
-            ));
-            $model->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => __('responses.create_successful'),
-                'model' => $model
-            ], 200);
-        });
+        $inputData = $request->only(['path', 'name', 'description', 'user_id']);
+		return $this->imageService->updateOne($id, $inputData);
     }
 
-    public function update(int $id, Request $request) : JsonResponse
+    public function deleteOne(int $id)
     {
-        $request->validate([
-            'path' => 'string|max:255',
-            'name' => 'string|max:255',
-            'description' => 'string|max:255'
-        ]);
-
-        try {
-            $model = Image::findOrFail($id);
-        }
-        catch (\Exception $err) {
-            logger($err->getMessage());
-
-            return response()->json([ 
-                'status' => false, 
-                'message' => $err->getMessage(), 
-                'model' => null 
-            ], 422);
-        }
-
-        try {
-            $model->fill($request->only(
-                'path',
-                'name',
-                'description',
-                'user_id'
-            ));
-            $model->save();
-        }
-        catch (\Exception $err) {
-            logger($err->getMessage());
-
-            return response()->json([ 
-                'status' => false, 
-                'message' => $err->getMessage(), 
-                'model' => null 
-            ], 422);
-        }
-
-        return response()->json([ 
-            'status' => true, 
-            'message' => __('responses.update_successful'), 
-            'model' => $model 
-        ], 200);
-    }
-
-    public function delete(int $id, Request $request) : JsonResponse
-    {
-        try {
-            Image::destroy($id);
-        }
-        catch (\Exception $err) {
-            logger($err->getMessage());
-
-            return response()->json([ 
-                'status' => false, 
-                'message' => $err->getMessage(), 
-                'model' => null 
-            ], 422);
-        }
-
-        return response()->json([ 
-            'status' => true, 
-            'message' => __('responses.delete_successful'), 
-            'model' => null 
-        ], 200);
-    }
-
-    public function store(Request $request)
-    {
-        if($request->hasFile('profile_image')) {
-            //get filename with extension
-            $filenamewithextension = $request->file('profile_image')->getClientOriginalName();
-     
-            //get filename without extension
-            $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
-     
-            //get file extension
-            $extension = $request->file('profile_image')->getClientOriginalExtension();
-     
-            //filename to store
-            $filenametostore = $filename.'_'.time().'.'.$extension;
-     
-            //Upload File
-            $request->file('profile_image')->storeAs('public/profile_images', $filenametostore);
-            $request->file('profile_image')->storeAs('public/profile_images/thumbnail', $filenametostore);
-     
-            //Resize image here
-            $thumbnailpath = public_path('storage/profile_images/thumbnail/'.$filenametostore);
-            $img = ImageMagick::make($thumbnailpath)->resize(400, 150, function($constraint) {
-                $constraint->aspectRatio();
-            });
-            $img->save($thumbnailpath);
-
-            //Hard crop
-            // $img = Image::make($thumbnailpath)->resize(100, 100)->save($thumbnailpath);
-     
-            return redirect('home')->with('success', "Image uploaded successfully.");
-        }
-    }
-
-    public function setParamsBeforeQuery($q, array $params)
-    {
-        if (isset($params['query'])) {
-            $q = $q->where('path', 'like', '%'. $params['query'] .'%')
-                ->orWhere('name', 'like', '%'. $params['query'] .'%')
-                ->orWhere('description', 'like', '%'. $params['query'] .'%');
-        }
-
-        return parent::setParamsBeforeQuery($q, $params);
+		return $this->imageService->deleteOne($id);
     }
 }

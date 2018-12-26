@@ -13,90 +13,59 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::post('login', 'UserController@login');
-// Route::post('register', 'UserController@register');
-
-
+Auth::routes();
 
 // Маршруты аутентификации
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
-// Маршруты регистрации
+// // Маршруты регистрации
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
 
-Route::prefix('/')
-	// ->middleware('auth:api')
-	->group(function() {
-		Route::prefix('/image')
-			->group(function() {
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-				Route::get('/', 'ImageController@collection');
+Route::prefix('/')->group(function() {
+	Route::prefix('/image')->group(function() {
+		Route::get('/', 'ImageController@showAll');
+		Route::get('/{id}', 'ImageController@showOne');
+		Route::post('/', 'ImageController@createOne');
+		Route::patch('/{id}', 'ImageController@updateOne');
+		Route::delete('/{id}', 'ImageController@deleteOne');
+	});
 
-				Route::get('/{id}', 'ImageController@item');
+	Route::prefix('/user')->group(function() {
+		Route::get('/', 'UserController@showAll');
+		Route::get('/{id}', 'UserController@showOne');
+		Route::post('/', 'UserController@createOne');
+		Route::patch('/{id}', 'UserController@updateOne');
+		Route::delete('/{id}', 'UserController@deleteOne');
+	});
 
-				Route::post('', 'ImageController@create');
+	Route::prefix('/comment')->group(function() {
+		Route::get('/', 'CommentController@showAll');
+		Route::get('/{id}', 'CommentController@showOne');
+		Route::post('/', 'CommentController@createOne');
+		Route::patch('/{id}', 'CommentController@updateOne');
+		Route::delete('/{id}', 'CommentController@deleteOne');
+	});
 
-				Route::patch('/{id}', 'ImageController@update');
+	Route::prefix('/like')->group(function() {
+		Route::get('/', 'LikeController@showAll');
+		Route::get('/{id}', 'LikeController@showOne');
+		Route::post('/', 'LikeController@createOne');
+		Route::patch('/{id}', 'LikeController@updateOne');
+		Route::delete('/{id}', 'LikeController@deleteOne');
+	});
 
-				Route::delete('/{id}', 'ImageController@delete');
-		});
-
-		Route::prefix('user')
-			->group(function() {
-
-				Route::get('/', 'UserController@collection');
-
-				Route::get('/{id}', 'UserController@item');
-
-				Route::post('', 'UserController@create');
-
-				Route::patch('/{id}', 'UserController@update');
-
-				Route::delete('/{id}', 'UserController@delete');
-		});
-
-		Route::prefix('/commnent')
-			->group(function() {
-
-				Route::get('/', 'CommentsController@collection');
-
-				Route::get('/{id}', 'CommentsController@item');
-
-				Route::post('', 'CommentsController@create');
-
-				Route::patch('/{id}', 'CommentsController@update');
-
-				Route::delete('/{id}', 'CommentsController@delete');
-		});
-
-		Route::prefix('like')
-			->group(function() {
-
-				Route::get('/', 'LikeController@collection');
-
-				Route::get('/{id}', 'LikeController@item');
-
-				Route::post('', 'LikeController@create');
-
-				Route::patch('/{id}', 'LikeController@update');
-
-				Route::delete('/{id}', 'LikeController@delete');
-		});
-
-		Route::prefix('filter')
-			->group(function() {
-
-				Route::get('/', 'FilterController@collection');
-
-				Route::get('/{id}', 'FilterController@item');
-
-				Route::post('', 'FilterController@create');
-
-				Route::patch('/{id}', 'FilterController@update');
-
-				Route::delete('/{id}', 'FilterController@delete');
-		});
+	Route::prefix('/filter')->group(function() {
+		Route::get('/', 'FilterController@showAll');
+		Route::get('/{id}', 'FilterController@showOne');
+		Route::post('/', 'FilterController@createOne');
+		Route::patch('/{id}', 'FilterController@updateOne');
+		Route::delete('/{id}', 'FilterController@deleteOne');
+	});
 });
