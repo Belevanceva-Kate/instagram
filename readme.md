@@ -1,16 +1,24 @@
-Instagram
+<h2>Instagram</h2>
 
-composer install
-php artisan migrate
-php artisan db:seed
-php artisan serve
+<br>
+<br>
 
-postman 
+<ul>
+	<li>composer install</li>
+	<li>php artisan migrate</li>
+	<li>php artisan db:seed</li>
+	<li>php artisan serve</li>
+</ul>
 
-POST http://127.0.0.1:8000/api/image body->form-data
+<br>
+<br>
 
-path (change to file type) - *image* 
-name - Name
-description - Description
-user_id - 8
-filter[contrast][brightness] - 65
+<p>postman</p>
+<p>POST http://127.0.0.1:8000/api/image body->form-data</p>
+<ul>
+	<li>path (change to file type) - image</li>
+	<li>name - Name</li>
+	<li>description - Description</li>
+	<li>user_id - 8</li>
+	<li>filter[contrast][brightness] - 65</li>
+</ul>
