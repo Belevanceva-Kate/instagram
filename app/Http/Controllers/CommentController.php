@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+// use Illuminate\Http\Request;
 use App\Http\Requests\CommentRequestValidation;
 use App\Services\CommentService;
 
@@ -25,12 +26,13 @@ class CommentController extends Controller
 
     public function createOne(CommentRequestValidation $request)
     {
-		return $this->commentService->createOne();
+        $inputData = $request->only(['content', 'image_id', 'user_id']);
+		return $this->commentService->createOne($inputData);
     }
 
     public function updateOne(int $id, CommentRequestValidation $request)
     {
-		return $this->commentService->updateOne($id);
+		return $this->commentService->updateOne($id, $request);
     }
 
     public function deleteOne(int $id)

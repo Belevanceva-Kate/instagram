@@ -23,7 +23,7 @@ class Filter extends XModel
 
     public static function updateOne(int $id, array $attributes)
     {
-    	return Filter::findOrFail($id)->fill($attributes->save());
+    	return Filter::findOrFail($id)->fill($attributes)->save();
     }
 
     public static function deleteOne(int $id)

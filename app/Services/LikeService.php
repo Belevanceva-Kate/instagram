@@ -25,18 +25,18 @@ class LikeService
     	return new LikeCollectionResource($this->likeRepository->showAll());
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return new LikeDataResource($this->likeRepository->createOne($id));
+    	return new LikeDataResource($this->likeRepository->createOne($request));
     }
 
-    public function updateOne(int $id)
+    public function updateOne(int $id, $request)
     {
-    	return new LikeDataResource($this->likeRepository->updateOne($id));
+    	return new LikeDataResource($this->likeRepository->updateOne($id, $request));
     }
 
     public function deleteOne(int $id)
     {
-    	return new LikeDeleteResource($this->likeRepository->deleteOne());
+    	return new LikeDeleteResource($this->likeRepository->deleteOne($id));
     }
 }

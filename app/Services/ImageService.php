@@ -36,7 +36,6 @@ class ImageService
         if(key_exists('filter', $request)) {
             unset($request['filter']);
         }
-        
     	return new ImageDataResource($this->imageRepository->createOne($request));
     }
 

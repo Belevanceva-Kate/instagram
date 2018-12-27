@@ -25,14 +25,14 @@ class CommentService
     	return new CommentCollectionResource($this->commentRepository->showAll());
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return new CommentDataResource($this->commentRepository->createOne());
+    	return new CommentDataResource($this->commentRepository->createOne($request));
     }
 
-    public function updateOne(int $id)
+    public function updateOne(int $id, $request)
     {
-    	return new CommentDataResource($this->commentRepository->updateOne($id));
+    	return new CommentDataResource($this->commentRepository->updateOne($id, $request));
     }
 
     public function deleteOne(int $id)

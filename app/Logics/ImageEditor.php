@@ -4,8 +4,6 @@ namespace App\Logics;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-// use Intervention\Image\GD\Driver;
-// use Intervention\Image\Facades\Image;
 use Intervention\Image\Filters\FilterInterface;
 use Image;
 
@@ -16,36 +14,47 @@ class ImageEditor
     // }
 
     public function checkFilters($request) { 
+        // print_r($request);
+        // print_r(json_decode($request['filter']));
+        // print_r(json_decode($request['filter'])->contrast->brightness);
+
+        // foreach (json_decode($request['filter']) as $key => $value) {
+        //     print_r($key);
+        //     print_r($value);
+        // }
+
+        // exit();
         $storedImage = $this->store($request['path']);
         if(key_exists('filter', $request)) {
-            foreach ($request['filter'] as $key => $value) {
+            $filter = json_decode($request['filter']);
+            foreach ($filter as $key => $value) {
                 switch ($key) {
                     case 'resize':
                         $resizeResult = $this->resize(
                             $storedImage,
-                            $request['filter']['resize']['width'], 
-                            $request['filter']['resize']['height']
+                            $filter->resize->width, 
+                            $filter->resize->height
                         );
                         break;
                     case 'blur':
                         $blurResult = $this->blur(
                             $storedImage,
-                            $request['filter']['blur']['radius']
+                            $filter->blur->radius
                         );
                         break;
                     case 'contrast':
                         $contrastResult = $this->contrast(
                             $storedImage,
-                            $request['filter']['contrast']['brightness']
+                            $filter->contrast->brightness
                         );
                         break;
                     case 'crop':
                         $cropResult = $this->crop(
                             $storedImage,
-                            $request['filter']['crop']['width'],
-                            $request['filter']['crop']['height'],
-                            $request['filter']['crop']['x'],
-                            $request['filter']['crop']['y']
+                            $filter->crop->width,
+                            $filter->crop->height,
+                            $filter->crop->x,
+                            $filter->crop->y
                         );
                         break;
                     default:
@@ -88,3 +97,31 @@ class ImageEditor
         return Image::make('storage/img/' . $title)->crop($width, $height, $x, $y)->save();
     }
 }
+
+
+
+
+
+
+/*
+
+{
+  "resize" : {
+    "width": 100,
+    "height": 100
+  },
+  "contrast": {
+    "brightness": 65
+  },
+  "crop": {
+    "width": 100,
+    "height": 100,
+    "x": 100,
+    "y": 100
+  },
+  "blur": {
+    "radius": 5
+  }
+}
+
+*/

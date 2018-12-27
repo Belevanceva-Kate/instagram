@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\FilterRequestValidation;
 use App\Services\FilterService;
 
@@ -25,7 +26,8 @@ class FilterController extends Controller
 
     public function createOne(FilterRequestValidation $request)
     {
-		return $this->filterService->createOne();
+        $inputData = $request->only(['name']);
+		return $this->filterService->createOne($inputData);
     }
 
     public function updateOne(int $id, FilterRequestValidation $request)

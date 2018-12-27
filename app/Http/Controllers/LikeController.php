@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\LikeRequestValidation;
 use App\Services\LikeService;
 
@@ -25,12 +26,13 @@ class LikeController extends Controller
 
     public function createOne(LikeRequestValidation $request)
     {
-		return $this->likeService->createOne();
+        $inputData = $request->only(['image_id', 'user_id']);
+		return $this->likeService->createOne($inputData);
     }
 
     public function updateOne(int $id, LikeRequestValidation $request)
     {
-		return $this->likeService->updateOne($id);
+		return $this->likeService->updateOne($id, $request);
     }
 
     public function deleteOne(int $id)

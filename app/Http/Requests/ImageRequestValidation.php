@@ -13,7 +13,8 @@ class ImageRequestValidation extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        // return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,7 @@ class ImageRequestValidation extends FormRequest
     public function rules()
     {
         return [
-            'path' => 'required|string|max:255',
+            'path' => 'required|file',
             'name' => 'string|max:255',
             'description' => 'string|max:255',
             'user_id' => 'required|integer',

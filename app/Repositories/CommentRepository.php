@@ -28,20 +28,20 @@ class CommentRepository
         }
     }
 
-    public function createOne()
+    public function createOne($request)
     {
         try {
-           return Comment::createOne(); 
+           return Comment::createOne($request); 
         }
         catch (\Exception $e) {
             throw new \Exception('Creating error');
         }
     }
 
-    public function updateOne(int $id)
+    public function updateOne(int $id, $request)
     {
         try {
-    	   return Comment::updateOne($id);
+    	   return Comment::updateOne($id, $request->all());
         }
         catch (\Exception $e) {
             throw new \Exception('Updating error');

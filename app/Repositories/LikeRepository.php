@@ -23,9 +23,9 @@ class LikeRepository
     	return Like::showAll();
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return Like::createOne();
+    	return Like::createOne($request);
     }
 
     public function updateOne(int $id)

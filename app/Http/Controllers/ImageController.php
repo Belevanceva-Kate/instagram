@@ -24,22 +24,17 @@ class ImageController extends Controller
 		return $this->imageService->showAll();
     }
 
-    public function createOne(Request $request)
+    public function createOne(ImageRequestValidation $request)
     {
-        // print_r($request->all());
-
-        // if param was send
         if(key_exists('filter', $request->all())) {
             $inputData = $request->only(['path', 'name', 'description', 'user_id', 'filter']);
-        }
-        else {
+        } else {
             $inputData = $request->only(['path', 'name', 'description', 'user_id']);
         }
-
         return $this->imageService->createOne($inputData);
     }
 
-    public function updateOne(int $id, Request $request)
+    public function updateOne(int $id, ImageRequestValidation $request)
     {
         $inputData = $request->only(['path', 'name', 'description', 'user_id']);
 		return $this->imageService->updateOne($id, $inputData);

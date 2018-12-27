@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\UserRequestValidation;
 use App\Services\UserService;
 
@@ -25,7 +26,7 @@ class UserController extends Controller
 
     public function createOne(UserRequestValidation $request)
     {
-		return $this->userService->createOne();
+		return $this->userService->createOne($request);
     }
 
     public function updateOne(int $id, UserRequestValidation $request)

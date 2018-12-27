@@ -25,9 +25,9 @@ class UserService
     	return new UserCollectionResource($this->userRepository->showAll());
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return new UserDataResource($this->userRepository->createOne());
+    	return new UserDataResource($this->userRepository->createOne($request));
     }
 
     public function updateOne(int $id)

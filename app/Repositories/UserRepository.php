@@ -23,9 +23,9 @@ class UserRepository
     	return User::showAll();
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return User::createOne();
+    	return User::createOne($request);
     }
 
     public function updateOne(int $id)

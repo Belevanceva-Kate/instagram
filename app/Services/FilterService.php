@@ -20,14 +20,14 @@ class FilterService
     	return new FilterDataResource($this->filterRepository->showOne($id));
     }
 
-    public function showAll()
+    public function showAll($request)
     {
-    	return new FilterCollectionResource($this->filterRepository->showAll());
+    	return new FilterCollectionResource($this->filterRepository->showAll($request));
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return new FilterDataResource($this->filterRepository->createOne());
+    	return new FilterDataResource($this->filterRepository->createOne($request));
     }
 
     public function updateOne(int $id)

@@ -23,14 +23,19 @@ class FilterRepository
     	return Filter::showAll();
     }
 
-    public function createOne()
+    public function createOne($request)
     {
-    	return Filter::createOne();
+        try {
+    	    return Filter::createOne($request);
+        }
+        catch (\Exception $e) {
+            throw new \Exception('Creating error');
+        }
     }
 
-    public function updateOne(int $id)
+    public function updateOne(int $id, $request)
     {
-    	return Filter::updateOne($id);
+    	return Filter::updateOne($id, $request);
     }
 
     public function deleteOne(int $id)
