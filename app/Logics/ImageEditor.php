@@ -14,16 +14,6 @@ class ImageEditor
     // }
 
     public function checkFilters($request) { 
-        // print_r($request);
-        // print_r(json_decode($request['filter']));
-        // print_r(json_decode($request['filter'])->contrast->brightness);
-
-        // foreach (json_decode($request['filter']) as $key => $value) {
-        //     print_r($key);
-        //     print_r($value);
-        // }
-
-        // exit();
         $storedImage = $this->store($request['path']);
         if(key_exists('filter', $request)) {
             $filter = json_decode($request['filter']);
